@@ -28,7 +28,6 @@ astra -v
 astra init
 
 # Habilitar para cambiar puerto
-# astra init 45000
 systemctl start astra
 systemctl enable astra
 
@@ -43,7 +42,7 @@ systemctl enable astra-epg
 # Configuración Astra
 cd /etc/astra
 rm astra.conf
-wget https://raw.githubusercontent.com/viejojavi/tv/main/astra.conf
+wget https://raw.githubusercontent.com/josemestre3009/config-server-catv/refs/heads/main/astra.conf
 systemctl restart astra
 
 # Instalar Oscam
