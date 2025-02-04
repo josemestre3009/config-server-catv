@@ -10,15 +10,6 @@ sudo sysctl -w net.ipv6.conf.all.disable_ipv6=1
 sudo sysctl -w net.ipv6.conf.default.disable_ipv6=1
 sudo sysctl -w net.ipv6.conf.lo.disable_ipv6=1
 
-# Cabecera
-chmod -x /etc/update-motd.d/*
-cd /etc/update-motd.d
-rm 00-header
-wget https://raw.githubusercontent.com/viejojavi/header/main/00-header
-chmod +x 00-header
-echo "Header Listo"
-sleep 5
-
 # Instalar Drivers TBS
 apt install curl -y
 curl -sSf https://cdn.cesbo.com/astra/scripts/drv-tbs.sh | sh
