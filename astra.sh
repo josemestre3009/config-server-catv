@@ -1,0 +1,68 @@
+#!/bin/sh
+
+# Agregar usuario
+useradd -m adminsky -s /bin/bash && echo "adminsky:adminsky" | chpasswd
+usermod -aG sudo adminsky
+sleep 5
+
+# Deshabilitar IPv6
+sudo sysctl -w net.ipv6.conf.all.disable_ipv6=1
+sudo sysctl -w net.ipv6.conf.default.disable_ipv6=1
+sudo sysctl -w net.ipv6.conf.lo.disable_ipv6=1
+
+# Cabecera
+chmod -x /etc/update-motd.d/*
+cd /etc/update-motd.d
+rm 00-header
+wget https://raw.githubusercontent.com/viejojavi/header/main/00-header
+chmod +x 00-header
+echo "Header Listo"
+sleep 5
+
+# Instalar Drivers TBS
+apt install curl -y
+curl -sSf https://cdn.cesbo.com/astra/scripts/drv-tbs.sh | sh
+
+# Cambiar el modo de la TBS SAT
+echo "options stid135 mode=1" > /etc/modprobe.d/stid135.conf
+
+# Validar TBS
+ls /dev/dvb
+sleep 5
+
+# Instalar Astra
+curl -Lo /usr/bin/astra https://cesbo.com/astra-latest
+chmod +x /usr/bin/astra
+astra -v
+astra init
+
+# Habilitar para cambiar puerto
+# astra init 45000
+systemctl start astra
+systemctl enable astra
+
+# EPG - Aggregator
+curl -Lo /etc/astra/epg-aggregator.lua https://cdn.cesbo.com/astra/scripts/epg-aggregator/epg-aggregator.lua
+cd /etc/systemd/system/
+wget https://cdn.cesbo.com/astra/scripts/epg-aggregator/astra-epg.service
+systemctl start astra-epg
+systemctl enable astra-epg
+(crontab -l ; echo "0 4 * * * systemctl restart astra-epg") | crontab -
+
+# Configuración Astra
+cd /etc/astra
+rm astra.conf
+wget https://raw.githubusercontent.com/viejojavi/tv/main/astra.conf
+systemctl restart astra
+
+# Instalar Oscam
+cd /home/adminsky
+apt-get update
+apt-get -y install subversion dialog
+svn co http://svn.speedbox.me/svn/oscam-install/trunk oscam
+chmod -R 0755 oscam
+cd oscam
+./install.sh
+
+# Reiniciar
+reboot
