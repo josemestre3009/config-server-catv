@@ -1,9 +1,6 @@
 #!/bin/sh
 
-# Agregar usuario
-useradd -m adminsky -s /bin/bash && echo "adminsky1:adminsky1" | chpasswd
-usermod -aG sudo adminsky
-sleep 5
+
 
 # Deshabilitar IPv6
 sudo sysctl -w net.ipv6.conf.all.disable_ipv6=1
@@ -19,7 +16,7 @@ echo "options stid135 mode=1" > /etc/modprobe.d/stid135.conf
 
 # Validar TBS
 ls /dev/dvb
-sleep 5
+sleep 10
 
 # Instalar Astra
 curl -Lo /usr/bin/astra https://cesbo.com/astra-latest
@@ -32,12 +29,12 @@ systemctl start astra
 systemctl enable astra
 
 # EPG - Aggregator
-curl -Lo /etc/astra/epg-aggregator.lua https://cdn.cesbo.com/astra/scripts/epg-aggregator/epg-aggregator.lua
-cd /etc/systemd/system/
-wget https://cdn.cesbo.com/astra/scripts/epg-aggregator/astra-epg.service
-systemctl start astra-epg
-systemctl enable astra-epg
-(crontab -l ; echo "0 4 * * * systemctl restart astra-epg") | crontab -
+#curl -Lo /etc/astra/epg-aggregator.lua https://cdn.cesbo.com/astra/scripts/epg-aggregator/epg-aggregator.lua
+#cd /etc/systemd/system/
+#wget https://cdn.cesbo.com/astra/scripts/epg-aggregator/astra-epg.service
+#systemctl start astra-epg
+#systemctl enable astra-epg
+#(crontab -l ; echo "0 4 * * * systemctl restart astra-epg") | crontab -
 
 # Configuración Astra
 cd /etc/astra
