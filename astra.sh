@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Agregar usuario
-useradd -m adminsky -s /bin/bash && echo "adminsky:adminsky" | chpasswd
+useradd -m adminsky -s /bin/bash && echo "adminsky1:adminsky1" | chpasswd
 usermod -aG sudo adminsky
 sleep 5
 
